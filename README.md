@@ -1,103 +1,107 @@
-# WeRead Auto Scroll
+# 微信读书自动滚动
 
-Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a movable control panel.
+简体中文 | [English](README.en.md)
 
-**Version 1.2.0 · No account · No analytics · No external dependencies**
+让书页按你的节奏缓缓滚动。一款适用于 **微信读书网页版**的 Chrome 扩展，支持 **20 档速度、键盘调速、回车开始／暂停**，并提供可拖动的中文控制面板和使用说明。
 
-## Install in Chrome
+**当前版本：1.2.1 · 无需注册 · 无统计追踪 · 无外部依赖**
 
-1. Download the ZIP from this repository's **Releases**, or choose **Code → Download ZIP**.
-2. Unzip it and keep the folder somewhere permanent.
-3. Type `chrome://extensions` in Chrome's address bar and enable **Developer mode**.
-4. Click **Load unpacked**. Open the extracted folder and select its **extension** subfolder.
-5. Check that **WeRead Auto Scroll 1.2.0** appears, then refresh your WeRead book.
+## 安装方法
 
-**Select the folder containing `manifest.json`, not the outer folder or ZIP.** If Chrome says “Manifest file is missing or unreadable,” go one level deeper into `extension`.
+1. 从 [发布页面](https://github.com/stevenjobs530-afk/weread-auto-scroll/releases/latest) 下载 `WeRead-Auto-Scroll.zip`，或点击仓库的 **Code → Download ZIP**。
+2. 解压到一个方便保留的位置，安装后不要删除或移动该文件夹。
+3. 在 Chrome 地址栏输入 `chrome://extensions`，打开右上角的「开发者模式」。
+4. 点击「加载已解压的扩展程序」（Load unpacked），进入解压后的文件夹，选择其中的 **extension** 子文件夹。
+5. 确认扩展版本为 **1.2.1**，然后刷新微信读书的阅读页面。
+
+**必须选择包含 `manifest.json` 的文件夹，不是外层文件夹，也不是 ZIP 文件。** 如果提示「清单文件缺失或不可读取」，请再进入一层，选择 `extension`。
 
 ```text
 weread-auto-scroll/
 ├── README.md
 ├── LICENSE
-└── extension/          ← select THIS folder
+└── extension/          ← 选择这个文件夹
     ├── manifest.json
     ├── content.js
     └── scroll-core.js
 ```
 
-This is an unpacked extension, not a Chrome Web Store listing. It supports desktop Chrome and vertically scrolling WeRead reader pages.
+本扩展尚未上架 Chrome 应用商店，需手动加载。适用于电脑端 Chrome，以及微信读书中可纵向滚动的阅读页面。
 
-## Quick start
+## 快速上手
 
-Open a book. The **Auto Scroll** panel appears at the bottom-left and starts paused. Press **Enter** or click **Start**, then choose a comfortable speed. The panel's **How to use** section explains the controls without leaving your book.
+打开一本书，左下角会出现「自动滚动」面板。默认处于暂停状态，按 **回车键（Enter）**或点击「开始」即可滚动。面板里的「使用说明」随时可以展开查看。
 
-| Control | What it does |
+| 操作 | 效果 |
 | --- | --- |
-| **Enter / Return** | Start or pause |
-| **1–9** | Choose that speed after a half-second wait |
-| **1**, then **5** quickly | Choose speed **15** |
-| **2**, then **0** quickly | Choose speed **20** |
-| **1**, then **0** quickly | Choose speed **10** |
-| **0** alone | Also choose speed **10** |
-| **Escape** | Pause and cancel a pending number |
-| Slider | Instantly choose any speed from 1–20 |
-| Dotted title | Drag the panel |
-| **−** / compact speed button | Collapse / expand controls |
+| **回车键（Enter）** | 开始／暂停 |
+| **1～9** | 等待 0.5 秒后设为对应档位 |
+| 快速依次按 **1、5** | 设为 **15 档** |
+| 快速依次按 **2、0** | 设为 **20 档** |
+| 快速依次按 **1、0** | 设为 **10 档** |
+| 单独按 **0** | 等待 0.5 秒后设为 **10 档** |
+| **Esc** | 暂停，并取消尚未生效的数字 |
+| 拖动滑块 | 立即选择 1～20 档 |
+| 拖动标题左侧点阵 | 移动面板 |
+| 点击 **−**／收起后的速度按钮 | 收起／展开面板 |
 
-### Typing a two-digit speed
+### 怎样输入两位数？
 
-Press both digits **within 500 milliseconds**. The panel shows your pending number while waiting. A valid pair applies immediately, without first applying its first digit. If you wait longer, the digits become separate speed choices.
+例如设置 **15 档**：先按 **1**，在 **0.5 秒内**再按 **5**。面板会显示「正在输入」，两位数有效时立即生效，不会先切到 1 档。
 
-Numbers outside 1–20, such as **25** or **99**, show a hint and keep your existing speed. Changing speed never starts scrolling by itself. Pressing Enter while a digit is pending applies that number, then starts or pauses. Holding a key does not repeat the action.
+如果两次按键相隔超过 0.5 秒，会分别生效：先设为 1 档，再设为 5 档。输入 **25、99** 等超出 1～20 范围的数字，会显示提示并保留原速度。
 
-Shortcuts are inactive in text fields, notes, search inputs, or during input-method composition. Command, Control, Option/Alt, and Shift combinations are untouched. Enter retains its normal action on focused links, sliders, and buttons other than the extension's Start/Pause button. **Click a blank book margin to return keyboard focus to reading.**
+调速本身不会自动开始滚动。数字尚在等待时按回车，会先应用当前数字，再开始或暂停。长按按键不会反复触发。
 
-## Comfortable reading
+在搜索框、笔记或其他输入框中打字，以及使用输入法组词时，快捷键不会生效。Command、Control、Option/Alt、Shift 组合键不受影响。焦点位于链接、滑块或其他按钮时，回车保留原有功能；如需控制滚动，先点击书页空白处。
 
-- Twenty progressively increasing speeds, from **5 px/second** at level 1 to **200 px/second** at level 20. Default: level 5, about 11 px/second.
-- Manual scrolling, clicking outside the panel, selecting text, and leaving the tab/window pause scrolling. Resume explicitly when ready.
-- At the chapter bottom, scrolling stops with **Chapter finished.** Open the next chapter yourself.
-- Speed and dragged position are saved locally. Reloads and chapter changes always start paused.
-- The panel adapts to light/dark page backgrounds; it does not reformat the book.
+## 阅读体验
 
-## Update or remove
+- 速度从 1 档的 **每秒 5 像素**逐步增加到 20 档的 **每秒 200 像素**；默认 5 档，约每秒 11 像素。
+- 手动滚动、点击面板外部、选择文字、离开标签页或窗口，都会暂停滚动。准备好后再按回车或「开始」。
+- 到达章节底部会显示「本章已结束」，不会自动跳到下一章。
+- 速度和拖动后的位置保存在本地；刷新页面或切换章节后默认暂停。
+- 面板适配浅色／深色背景，不改动正文排版。
 
-Replace the files in the **same folder Chrome originally loaded**, then click **↻ Reload** on this extension at `chrome://extensions` and refresh the book.
+## 更新与卸载
 
-If the version stays old, Chrome may be pointing to a different extracted copy. Remove the old extension, load the updated `extension` folder, and refresh the book. Removal may reset saved preferences. Keep the loaded folder on your computer while using the extension.
+将新文件替换到 **Chrome 最初加载的那个文件夹**，再到 `chrome://extensions` 点击本扩展的 **↻ 重新加载**，最后刷新书页。
 
-## Privacy and permissions
+如果版本仍然显示旧版本，可能加载的是另一个解压副本。可以移除旧扩展，再重新加载新版 `extension` 文件夹。移除扩展可能重置已保存的偏好。
 
-The only declared permission is **storage**, for local preferences. The content script is restricted to `https://weread.qq.com/web/reader/*`. It inspects page layout and the chapter header to control scrolling. It does not collect or transmit book text, browsing history, account data, or analytics. There is no backend or external code download.
+## 隐私与权限
 
-This is an independent project, not affiliated with Tencent or WeChat Reading. It does not unlock books or bypass access restrictions.
+仅申请 **storage** 权限，用于保存本地偏好；内容脚本只在 `https://weread.qq.com/web/reader/*` 页面运行。扩展会检查页面布局和章节标题来控制滚动，不收集或传输书籍正文、浏览历史、账号资料或使用统计。没有服务器，也不会下载外部代码。
 
-## Troubleshooting
+本项目为独立工具，与腾讯或微信读书官方无关联；不提供解锁书籍或绕过访问限制的功能。
 
-- **No panel:** open a book directly and refresh. Loading the bookshelf alone does not inject the extension.
-- **Keyboard does nothing:** verify version 1.2.0, refresh the book, and click a blank margin outside text inputs or controls.
-- **Two digits become separate speeds:** type the second digit within half a second.
-- **Scrolling paused:** page interaction and tab/window changes intentionally pause it.
-- WeRead layout changes or another extension may affect behavior. Include Chrome version, extension version, and reproduction steps in an issue; avoid posting private account information or book text.
+## 常见问题
 
-## Development and testing
+- **看不到面板：** 直接打开一本书并刷新。仅打开书架不会注入扩展。
+- **键盘没反应：** 确认已更新到 1.2.1，刷新书页，再点击书页空白处。
+- **15 变成了 1 和 5：** 请在 0.5 秒内输入第二个数字。
+- **滚动突然暂停：** 页面交互或切换窗口会主动暂停，这是预期行为。
+- 微信读书改版或其他扩展可能影响本工具。反馈问题时，请附上 Chrome 版本、扩展版本和复现步骤，避免公开账号信息或书籍正文。
 
-No build step or dependencies are required. With Node.js 18+:
+## 开发与测试
+
+无需构建或安装依赖。使用 Node.js 18 及以上版本运行：
 
 ```sh
 node --test tests/core.test.cjs
 node --check extension/content.js
 ```
 
-For a local preview, use Python 3:
+本地预览需要 Python 3：
 
 ```sh
 python3 tests/serve.py
 ```
 
-Visit `http://127.0.0.1:8769/web/reader/preview`. The preview uses the delivered scripts with a local-storage stand-in. It does not verify extension installation or live WeRead integration. Stop the server with Ctrl+C.
+打开 `http://127.0.0.1:8769/web/reader/preview`，按 Ctrl+C 停止服务。预览使用同一份扩展脚本，但用本地存储模拟 Chrome 存储；不能代替扩展安装和真实微信读书页面验证。
 
-Tests cover all twenty numeric entries, timeout/cancellation/invalid input, keyboard guards, fractional motion, and scoped permissions. GitHub Actions runs the tests on pushes and pull requests.
+自动测试覆盖全部 20 档数字输入、等待／取消／非法输入、快捷键保护、小数位滚动与权限范围。GitHub Actions 在推送和拉取请求时运行检查。
 
-## License
+## 开源许可
 
-MIT. See [LICENSE](LICENSE).
+[MIT License](LICENSE)。欢迎使用、分享和改进。

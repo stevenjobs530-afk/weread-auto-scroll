@@ -1,13 +1,22 @@
 {
   "manifest_version": 3,
-  "name": "WeRead Auto Scroll",
-  "version": "1.2.0",
-  "description": "Gentle, adjustable auto scrolling for WeChat Reading. Twenty speeds, easy pause, entirely local.",
-  "permissions": ["storage"],
-  "content_scripts": [{
-    "matches": ["https://weread.qq.com/web/reader/*"],
-    "js": ["scroll-core.js", "content.js"],
-    "run_at": "document_idle",
-    "world": "ISOLATED"
-  }]
+  "name": "微信读书自动滚动 · WeRead Auto Scroll",
+  "version": "1.2.1",
+  "description": "微信读书网页自动滚动工具：20 档速度、数字快捷键、回车开始或暂停，附中文使用说明。偏好仅保存在本地。",
+  "permissions": [
+    "storage"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://weread.qq.com/web/reader/*"
+      ],
+      "js": [
+        "scroll-core.js",
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "world": "ISOLATED"
+    }
+  ]
 }

@@ -32,17 +32,17 @@
       .collapsed .full { display:none; }
       .collapsed .mini { display:flex; }
     </style>
-    <section class="panel" aria-label="WeRead Auto Scroll">
+    <section class="panel" lang="zh-CN" aria-label="微信读书自动滚动">
       <div class="full">
-        <header><span class="drag" title="Drag to move">⠿ Auto Scroll</span><button class="collapse" aria-label="Collapse controls">−</button></header>
-        <div class="line"><label for="speed">Reading speed</label><output for="speed">5 / 20</output></div>
-        <input id="speed" aria-label="Reading speed" type="range" min="1" max="20" step="1" value="5">
-        <div class="line ends"><span>Slow</span><span>Fast</span></div>
-        <div class="line"><button class="toggle" aria-pressed="false">Start</button><span class="status" role="status" aria-live="polite">Ready to read</span></div>
-        <div class="keys">Type 1–20 · Enter: start/pause</div>
-        <details><summary>How to use</summary><p>Press <b>Enter</b> to start or pause. Use the slider or type a speed from <b>1 to 20</b>.</p><p>For <b>15</b>, press <b>1</b> then <b>5</b> within <b>half a second</b>. For <b>20</b>, press <b>2</b> then <b>0</b>.</p><p>A single digit applies after half a second. <b>0 alone</b> selects speed 10. Enter applies a pending number and starts/pauses. Invalid numbers keep your current speed.</p><p>Shortcuts are inactive while typing in a text field. Click the book margin if another control has keyboard focus. Scrolling pauses when you interact with the page or leave the tab.</p><p>Drag the dotted title to move this panel; use − to collapse it. At chapter end, open the next chapter yourself.</p><p>WeRead Auto Scroll · v1.2.0</p></details>
+        <header><span class="drag" title="拖动以移动面板">⠿ 自动滚动</span><button class="collapse" aria-label="收起控制面板">−</button></header>
+        <div class="line"><label for="speed">滚动速度</label><output for="speed">5 / 20</output></div>
+        <input id="speed" aria-label="滚动速度" type="range" min="1" max="20" step="1" value="5">
+        <div class="line ends"><span>慢</span><span>快</span></div>
+        <div class="line"><button class="toggle" aria-pressed="false">开始</button><span class="status" role="status" aria-live="polite">准备就绪</span></div>
+        <div class="keys">输入 1～20 调速 · 回车开始／暂停</div>
+        <details><summary>使用说明</summary><p>按 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>拖动标题左侧的点阵可移动面板，点击「−」可收起。到达章节末尾后会停止，请自行打开下一章。</p><p>微信读书自动滚动 · v1.2.1</p></details>
       </div>
-      <div class="mini"><span class="drag" title="Drag to move">⠿</span><button class="toggle" aria-pressed="false">Start</button><button class="expand" aria-label="Expand controls">5 / 20 ↗</button></div>
+      <div class="mini"><span class="drag" title="拖动以移动面板">⠿</span><button class="toggle" aria-pressed="false">开始</button><button class="expand" aria-label="展开控制面板">5 / 20 ↗</button></div>
       <div class="entry" role="status" aria-live="polite"></div>
     </section>`;
   document.documentElement.append(host);
@@ -54,8 +54,8 @@
   const save = values => { try { chrome.storage.local.set(values).catch(() => {}); } catch {} };
   const numberEntry = new NumberEntry({
     apply: value => { level = value; update(); save({ speed: level }); },
-    preview: value => { root.querySelector('.entry').textContent = value ? `Speed: ${value}…` : ''; },
-    invalid: () => { root.querySelector('.entry').textContent = 'Choose a speed from 1 to 20.'; }
+    preview: value => { root.querySelector('.entry').textContent = value ? `正在输入：${value}…` : ''; },
+    invalid: () => { root.querySelector('.entry').textContent = '请输入 1～20 之间的速度。'; }
   });
   root.querySelector('details').addEventListener('toggle', clamp);
   function chapterKey() {
@@ -65,13 +65,13 @@
     root.querySelector('output').textContent = `${level} / 20`;
     root.querySelector('.expand').textContent = `${level} / 20 ↗`;
     slider.value = level;
-    slider.setAttribute('aria-valuetext', `${level} of 20, ${speed(level).toFixed(1)} pixels per second`);
+    slider.setAttribute('aria-valuetext', `第 ${level} 档，共 20 档，每秒 ${speed(level).toFixed(1)} 像素`);
     root.querySelectorAll('.toggle').forEach(button => {
-      button.textContent = running ? 'Pause' : 'Start';
+      button.textContent = running ? '暂停' : '开始';
       button.setAttribute('aria-pressed', String(running));
     });
   }
-  function pause(message = 'Paused') {
+  function pause(message = '已暂停') {
     numberEntry.clear();
     running = false; cancelAnimationFrame(frame); endSince = null;
     root.querySelector('.status').textContent = message; update();
@@ -88,7 +88,7 @@
     window.scrollTo({ top: next, left: window.scrollX, behavior: 'instant' });
     if (scroll.scrollTop >= maximum - 1) {
       if (endSince === null) endSince = time;
-      if (time - endSince >= 900) { pause('Chapter finished.'); return; }
+      if (time - endSince >= 900) { pause('本章已结束'); return; }
     } else endSince = null;
     frame = requestAnimationFrame(tick);
   }
@@ -98,7 +98,7 @@
     // Starting after a selection is allowed, but never clears the selection.
     route = location.href; chapter = chapterKey();
     motion.reset(document.scrollingElement.scrollTop); lastMaximum = null; endSince = null;
-    running = true; root.querySelector('.status').textContent = 'Scrolling'; update();
+    running = true; root.querySelector('.status').textContent = '滚动中'; update();
     frame = requestAnimationFrame(tick);
   }
   root.querySelectorAll('.toggle').forEach(button => button.addEventListener('click', toggle));
@@ -171,7 +171,7 @@
   setInterval(() => {
     const nextChapter = chapterKey();
     if (location.href !== route || nextChapter !== chapter) {
-      route = location.href; chapter = nextChapter; pause('Ready to read');
+      route = location.href; chapter = nextChapter; pause('准备就绪');
     }
     host.style.setProperty('display', inReader() ? 'block' : 'none', 'important'); theme();
   }, 400);
