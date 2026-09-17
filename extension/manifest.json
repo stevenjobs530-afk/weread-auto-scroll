@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "WeRead Auto Scroll",
+  "version": "1.2.0",
+  "description": "Gentle, adjustable auto scrolling for WeChat Reading. Twenty speeds, easy pause, entirely local.",
+  "permissions": ["storage"],
+  "content_scripts": [{
+    "matches": ["https://weread.qq.com/web/reader/*"],
+    "js": ["scroll-core.js", "content.js"],
+    "run_at": "document_idle",
+    "world": "ISOLATED"
+  }]
+}
