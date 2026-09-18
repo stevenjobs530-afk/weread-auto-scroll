@@ -43,5 +43,10 @@
       else this.invalid();
     }
   }
-  globalThis.WeReadScrollCore = { speed, Motion, shortcut, NumberEntry };
+  function scrollPercent(top, height, viewport) {
+    const maximum = Math.max(0, height - viewport);
+    if (maximum <= 1 || top >= maximum - 1) return 100;
+    return Math.max(1, Math.min(99, Math.floor(Math.max(0, top) / maximum * 100)));
+  }
+  globalThis.WeReadScrollCore = { speed, Motion, shortcut, NumberEntry, scrollPercent };
 })();

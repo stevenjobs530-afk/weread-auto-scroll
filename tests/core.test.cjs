@@ -93,3 +93,18 @@ test('reading width fits portrait, landscape, and narrow viewports', () => {
   }
   assert.equal(layout.dimensions(1010,85).width,858);
 });
+const { scrollPercent } = globalThis.WeReadScrollCore;
+test('progress starts at 1 and reaches 100 only at the bottom', () => {
+  assert.equal(scrollPercent(0,2000,1000),1);
+  assert.equal(scrollPercent(500,2000,1000),50);
+  assert.equal(scrollPercent(990,2000,1000),99);
+  assert.equal(scrollPercent(1000,2000,1000),100);
+  assert.equal(scrollPercent(-50,2000,1000),1);
+  assert.equal(scrollPercent(1200,2000,1000),100);
+});
+test('short pages are complete and dynamic growth recalculates progress', () => {
+  assert.equal(scrollPercent(0,800,1000),100);
+  assert.equal(scrollPercent(0,1000,1000),100);
+  assert.equal(scrollPercent(1000,2000,1000),100);
+  assert.equal(scrollPercent(1000,3000,1000),50);
+});

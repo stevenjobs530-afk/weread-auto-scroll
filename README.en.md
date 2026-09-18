@@ -2,9 +2,9 @@
 
 [简体中文](README.md) | English
 
-Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a movable control panel.
+Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a slim edge-docked progress rail.
 
-**Version 1.3.0 · No account · No analytics · No external dependencies**
+**Version 1.4.0 · No account · No analytics · No external dependencies**
 
 ## Install in Chrome
 
@@ -12,7 +12,7 @@ Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Re
 2. Unzip it and keep the folder somewhere permanent.
 3. Type `chrome://extensions` in Chrome's address bar and enable **Developer mode**.
 4. Click **Load unpacked**. Open the extracted folder and select its **extension** subfolder.
-5. Check that **WeRead Auto Scroll 1.3.0** appears, then refresh your WeRead book.
+5. Check that **WeRead Auto Scroll 1.4.0** appears, then refresh your WeRead book.
 
 **Select the folder containing `manifest.json`, not the outer folder or ZIP.** If Chrome says “Manifest file is missing or unreadable,” go one level deeper into `extension`.
 
@@ -30,7 +30,7 @@ This is an unpacked extension, not a Chrome Web Store listing. It supports deskt
 
 ## Quick start
 
-Open a book. The **Auto Scroll** panel appears at the bottom-left and starts paused. Press **Enter** or click **Start**, then choose a comfortable speed. The panel's **使用说明 (How to use)** section explains the controls without leaving your book.
+Open a book. A **48px progress rail** appears at the left viewport edge, collapsed and paused. Click the percentage, speed, or gear to open settings. Press **Enter** or click **Start**, then choose a comfortable speed. The panel's **使用说明 (How to use)** section explains the controls without leaving your book.
 
 | Control | What it does |
 | --- | --- |
@@ -42,7 +42,7 @@ Open a book. The **Auto Scroll** panel appears at the bottom-left and starts pau
 | **0** alone | Also choose speed **10** |
 | **Escape** | Pause and cancel a pending number |
 | Slider | Instantly choose any speed from 1–20 |
-| Dotted title | Drag the panel |
+| Dotted handle | Move vertically or drag to the opposite edge |
 | **−** / compact speed button | Collapse / expand controls |
 
 ### Typing a two-digit speed
@@ -60,6 +60,16 @@ Shortcuts are inactive in text fields, notes, search inputs, or during input-met
 - At the chapter bottom, scrolling stops with **Chapter finished.** Open the next chapter yourself.
 - Speed and dragged position are saved locally. Reloads and chapter changes always start paused.
 - The panel adapts to light/dark page backgrounds; it only changes reading layout when customization is enabled.
+
+## Progress rail and glass appearance
+
+The rail docks inside the webpage viewport, adjacent to browser chrome; it is not a native Chrome sidebar. It is 48px wide instead of the previous 244px panel. Existing speed/layout preferences are retained; the previous free-floating position is replaced by a new dock position.
+
+Progress is the main document's `scrollTop / (scrollHeight - clientHeight)`: 1% at the top, 100% at the bottom or on non-scrollable pages. This is page position, not whole-book completion. Content growth, image loading, and layout changes recalculate the value. Each tab has independent progress/running state. Nested iframes do not inject a rail and their internal scrolling is excluded.
+
+Passive scroll events are coalesced to one animation-frame update; DOM writes only occur when the integer percentage changes. ResizeObserver tracks geometry, with the existing 400ms page check covering unusual dynamic layouts.
+
+Liquid Glass-inspired web buttons use translucent surfaces, background blur, highlights, and shadows with the existing green accent. This is not Apple's native material. Dark appearance and solid-color transparency fallbacks are included.
 
 ## Reading layout for portrait and large displays
 
@@ -88,7 +98,7 @@ This is an independent project, not affiliated with Tencent or WeChat Reading. I
 ## Troubleshooting
 
 - **No panel:** open a book directly and refresh. Loading the bookshelf alone does not inject the extension.
-- **Keyboard does nothing:** verify version 1.3.0, refresh the book, and click a blank margin outside text inputs or controls.
+- **Keyboard does nothing:** verify version 1.4.0, refresh the book, and click a blank margin outside text inputs or controls.
 - **Two digits become separate speeds:** type the second digit within half a second.
 - **Scrolling paused:** page interaction and tab/window changes intentionally pause it.
 - WeRead layout changes or another extension may affect behavior. Include Chrome version, extension version, and reproduction steps in an issue; avoid posting private account information or book text.
