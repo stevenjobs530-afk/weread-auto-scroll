@@ -12,3 +12,4 @@ jobs:
           node-version: 22
       - run: node --test tests/core.test.cjs
       - run: node --check extension/content.js
+      - run: node --check extension/reader-layout.js

@@ -74,3 +74,22 @@ test('cancel drops pending speed, Enter flush applies once', () => {
   const f=entryFixture(); f.entry.push(1); f.entry.clear(); f.expire(); assert.deepEqual(f.applied,[]);
   f.entry.push(8); f.entry.flush(); f.expire(); assert.deepEqual(f.applied,[8]);
 });
+require('../extension/reader-layout.js');
+const layout = globalThis.WeReadLayout;
+test('layout defaults do not change the site and malformed preferences are clamped', () => {
+  assert.equal(layout.css(1010,layout.defaults),'');
+  assert.deepEqual(layout.normalize(null),layout.defaults);
+  assert.equal(layout.normalize({width:200,top:-20,enabled:true}).width,95);
+  assert.equal(layout.normalize({width:20,top:999}).top,160);
+});
+test('reading width fits portrait, landscape, and narrow viewports', () => {
+  for(const viewport of [320,480,600,900,1010,1600,2560]) {
+    for(const percent of [50,85,95]) {
+      const d=layout.dimensions(viewport,percent);
+      assert.ok(d.width<=viewport-d.gutter*2);
+      assert.ok(d.left>=d.gutter);
+      assert.ok(d.width+d.left<=viewport-d.gutter);
+    }
+  }
+  assert.equal(layout.dimensions(1010,85).width,858);
+});

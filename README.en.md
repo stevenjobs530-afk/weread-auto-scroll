@@ -4,7 +4,7 @@
 
 Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a movable control panel.
 
-**Version 1.2.1 · No account · No analytics · No external dependencies**
+**Version 1.3.0 · No account · No analytics · No external dependencies**
 
 ## Install in Chrome
 
@@ -12,7 +12,7 @@ Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Re
 2. Unzip it and keep the folder somewhere permanent.
 3. Type `chrome://extensions` in Chrome's address bar and enable **Developer mode**.
 4. Click **Load unpacked**. Open the extracted folder and select its **extension** subfolder.
-5. Check that **WeRead Auto Scroll 1.2.1** appears, then refresh your WeRead book.
+5. Check that **WeRead Auto Scroll 1.3.0** appears, then refresh your WeRead book.
 
 **Select the folder containing `manifest.json`, not the outer folder or ZIP.** If Chrome says “Manifest file is missing or unreadable,” go one level deeper into `extension`.
 
@@ -59,7 +59,19 @@ Shortcuts are inactive in text fields, notes, search inputs, or during input-met
 - Manual scrolling, clicking outside the panel, selecting text, and leaving the tab/window pause scrolling. Resume explicitly when ready.
 - At the chapter bottom, scrolling stops with **Chapter finished.** Open the next chapter yourself.
 - Speed and dragged position are saved locally. Reloads and chapter changes always start paused.
-- The panel adapts to light/dark page backgrounds; it does not reformat the book.
+- The panel adapts to light/dark page backgrounds; it only changes reading layout when customization is enabled.
+
+## Reading layout for portrait and large displays
+
+Open **阅读区域调整** (Reading area), then enable **启用自定义版面** (Custom layout).
+
+- Reading width: 50–95% of the current viewport; start at 85%. Safety margins and the side toolbar cap the effective width.
+- Top spacing: 0–160 pixels below the site header. Book-internal heading and illustration spacing remains controlled by WeRead.
+- Restore default: removes the layout overrides and disables customization.
+
+WeRead reflows its text rather than stretching it. Chapter height remains content-driven with normal vertical scrolling. Layout changes pause scrolling and save preferences locally. Drag or collapse the floating panel if it covers text.
+
+The CSS was checked on a real 1010-pixel-wide WeRead page: the 85% setting increased text width from about 486 to 808 pixels without horizontal overflow. Local preview also checks the new controls; installed-extension verification is separate. Other books, narrow windows, or site changes may behave differently.
 
 ## Update or remove
 
@@ -76,7 +88,7 @@ This is an independent project, not affiliated with Tencent or WeChat Reading. I
 ## Troubleshooting
 
 - **No panel:** open a book directly and refresh. Loading the bookshelf alone does not inject the extension.
-- **Keyboard does nothing:** verify version 1.2.1, refresh the book, and click a blank margin outside text inputs or controls.
+- **Keyboard does nothing:** verify version 1.3.0, refresh the book, and click a blank margin outside text inputs or controls.
 - **Two digits become separate speeds:** type the second digit within half a second.
 - **Scrolling paused:** page interaction and tab/window changes intentionally pause it.
 - WeRead layout changes or another extension may affect behavior. Include Chrome version, extension version, and reproduction steps in an issue; avoid posting private account information or book text.

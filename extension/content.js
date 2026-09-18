@@ -10,7 +10,7 @@
     <style>
       :host { all:initial; color-scheme:light dark; }
       * { box-sizing:border-box; }
-      .panel { --bg:#fff; --ink:#25322d; --muted:#64736b; --line:#dce5df; --soft:#eef5f0; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); width:244px; max-width:calc(100vw - 16px); border:1px solid var(--line); border-radius:16px; box-shadow:0 6px 30px #0002; padding:12px; }
+      .panel { --bg:#fff; --ink:#25322d; --muted:#64736b; --line:#dce5df; --soft:#eef5f0; font:13px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--bg); width:244px; max-height:calc(100dvh - 16px); overflow-y:auto; max-width:calc(100vw - 16px); border:1px solid var(--line); border-radius:16px; box-shadow:0 6px 30px #0002; padding:12px; }
       .panel.dark { --bg:#242a27; --ink:#f1f5f2; --muted:#a9b8ae; --line:#46534b; --soft:#35463b; }
       header { display:flex; align-items:center; gap:6px; margin-bottom:12px; }
       .drag { flex:1; cursor:grab; touch-action:none; user-select:none; font-weight:650; letter-spacing:.1px; padding:3px 0; }
@@ -26,6 +26,10 @@
       details { max-height: min(360px, 45vh); overflow-y:auto; margin-top:8px; font-size:12px; color:var(--muted); }
       summary { cursor:pointer; padding:4px 0; }
       details p { margin:7px 0; }
+      .layout-check { display:flex; align-items:center; gap:7px; margin:8px 0; }
+      .layout-check input { width:auto; margin:0; }
+      .layout-value { font-size:11px; font-variant-numeric:tabular-nums; }
+      .layout-note { font-size:11px; }
       .entry { font-size:11px; color:var(--muted); }
       .mini { display:none; align-items:center; gap:7px; }
       .collapsed { width:auto; padding:8px; }
@@ -40,14 +44,23 @@
         <div class="line ends"><span>慢</span><span>快</span></div>
         <div class="line"><button class="toggle" aria-pressed="false">开始</button><span class="status" role="status" aria-live="polite">准备就绪</span></div>
         <div class="keys">输入 1～20 调速 · 回车开始／暂停</div>
-        <details><summary>使用说明</summary><p>按 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>拖动标题左侧的点阵可移动面板，点击「−」可收起。到达章节末尾后会停止，请自行打开下一章。</p><p>微信读书自动滚动 · v1.2.1</p></details>
+        <details class="layout-settings"><summary>阅读区域调整</summary>
+          <label class="layout-check"><input id="layout-enabled" type="checkbox">启用自定义版面</label>
+          <div class="line"><label for="layout-width">阅读宽度</label><output class="layout-value" for="layout-width">85%</output></div>
+          <input id="layout-width" type="range" aria-label="阅读宽度" min="50" max="95" step="1" value="85" disabled>
+          <div class="line"><label for="layout-top">顶部留白</label><output class="layout-value" for="layout-top">40 像素</output></div>
+          <input id="layout-top" type="range" aria-label="顶部留白" min="0" max="160" step="8" value="40" disabled>
+          <p class="layout-note">宽度按当前窗口计算，两侧保留边距。减少顶部留白可多显示一些内容，章节仍向下滚动。调整时会暂停滚动。</p>
+          <button id="layout-reset">恢复默认版面</button>
+        </details>
+        <details><summary>使用说明</summary><p>按 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>拖动标题左侧的点阵可移动面板，点击「−」可收起。到达章节末尾后会停止，请自行打开下一章。</p><p>展开「阅读区域调整」并启用自定义版面，可拓宽正文、减少顶部留白；点击「恢复默认版面」即可还原网站排版。版面偏好保存在本地。</p><p>微信读书自动滚动 · v1.3.0</p></details>
       </div>
       <div class="mini"><span class="drag" title="拖动以移动面板">⠿</span><button class="toggle" aria-pressed="false">开始</button><button class="expand" aria-label="展开控制面板">5 / 20 ↗</button></div>
       <div class="entry" role="status" aria-live="polite"></div>
     </section>`;
   document.documentElement.append(host);
   const panel = root.querySelector('.panel');
-  const slider = root.querySelector('input');
+  const slider = root.querySelector('#speed');
   const motion = new Motion();
   let level = 5, running = false, frame = 0, endSince = null, lastMaximum = null;
   let route = location.href, chapter = chapterKey(), position = null, moved = false;
@@ -57,12 +70,13 @@
     preview: value => { root.querySelector('.entry').textContent = value ? `正在输入：${value}…` : ''; },
     invalid: () => { root.querySelector('.entry').textContent = '请输入 1～20 之间的速度。'; }
   });
-  root.querySelector('details').addEventListener('toggle', clamp);
+  root.querySelectorAll('details').forEach(section => section.addEventListener('toggle', clamp));
+  globalThis.WeReadLayout.mount(root, pause);
   function chapterKey() {
     return document.querySelector('.readerTopBar_title')?.textContent || document.title;
   }
   function update() {
-    root.querySelector('output').textContent = `${level} / 20`;
+    root.querySelector('output[for="speed"]').textContent = `${level} / 20`;
     root.querySelector('.expand').textContent = `${level} / 20 ↗`;
     slider.value = level;
     slider.setAttribute('aria-valuetext', `第 ${level} 档，共 20 档，每秒 ${speed(level).toFixed(1)} 像素`);

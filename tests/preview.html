@@ -1,7 +1,7 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>WeRead Auto Scroll — local test</title>
-<style>body{margin:0;background:#f5f6f7;color:#202621;font:22px/1.8 Georgia,serif}main{max-width:800px;margin:auto;padding:70px 80px;background:white}h1{font:32px system-ui}header{font:14px system-ui;padding:15px;position:sticky;top:0;background:#e5efe8}button{padding:8px;margin-right:8px}body.dark,body.dark main{background:#202522;color:#eef3f0}</style>
+<style>body{margin:0;background:#f5f6f7;color:#202621;font:22px/1.8 Georgia,serif}main{max-width:800px;margin:auto;padding:70px 80px;background:white}h1{font:32px system-ui}header{font:14px system-ui;padding:15px;position:sticky;top:0;background:#e5efe8}button{padding:8px;margin-right:8px}body.dark,body.dark main{background:#202522;color:#eef3f0}.app_content{max-width:560px;padding:0}.readerChapterContent{margin:0 36px}.navBarOffset{padding-top:100px} .app_content h1{margin-top:0}</style>
 <header>Local test page · <button id="theme">Light / dark</button><button id="end">Go to chapter end</button><button id="chapter">Next chapter</button><button id="zoom">Zoom 125%</button></header>
-<main><h1>Chapter I · A quiet reading moment</h1><p>This is a local preview of the extension, using sample text. Its controls and scrolling code are the same files delivered in the extension.</p><div id="paragraphs"></div><button>Next chapter</button></main>
+<div class="readerContent"><main class="app_content"><div class="navBarOffset"></div><div class="readerChapterContent"><h1>Chapter I · A quiet reading moment</h1><p>This is a local preview of the extension, using sample text. Its controls and scrolling code are the same files delivered in the extension.</p><div id="paragraphs"></div><button>Next chapter</button></div></main></div>
 <script>
 history.replaceState(null,'','/web/reader/preview');
 window.chrome={storage:{local:{get:async()=>JSON.parse(localStorage.getItem('prefs')||'{}'),set:async values=>localStorage.setItem('prefs',JSON.stringify({...JSON.parse(localStorage.getItem('prefs')||'{}'),...values}))}}};
@@ -10,4 +10,4 @@ document.querySelector('#theme').onclick=()=>document.body.classList.toggle('dar
 document.querySelector('#end').onclick=()=>window.scrollTo(0,document.documentElement.scrollHeight);
 document.querySelector('#chapter').onclick=()=>{document.title='Chapter II';history.pushState(null,'','/web/reader/second');window.scrollTo(0,0)};
 document.querySelector('#zoom').onclick=()=>{document.body.style.zoom=document.body.style.zoom?'':'1.25'};
-</script><script src="/extension/scroll-core.js"></script><script src="/extension/content.js"></script></html>
+</script><script src="/extension/scroll-core.js"></script><script src="/extension/reader-layout.js"></script><script src="/extension/content.js"></script></html>
