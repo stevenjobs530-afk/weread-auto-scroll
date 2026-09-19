@@ -64,10 +64,10 @@
           <input id="layout-width" type="range" aria-label="阅读宽度" min="50" max="95" step="1" value="85" disabled>
           <div class="line"><label for="layout-top">顶部留白</label><output class="layout-value" for="layout-top">40 像素</output></div>
           <input id="layout-top" type="range" aria-label="顶部留白" min="0" max="160" step="8" value="40" disabled>
-          <p class="layout-note">宽度按当前窗口计算，两侧保留边距。减少顶部留白可多显示一些内容，章节仍向下滚动。调整时会暂停滚动。</p>
+          <p class="layout-note">宽度按当前窗口计算，两侧保留边距。减少顶部留白可多显示一些内容，章节仍向下滚动。调整后从新位置继续滚动。</p>
           <button id="layout-reset">恢复默认版面</button>
         </details>
-        <details><summary>使用说明</summary><p>按 <b>S</b> 或 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>按 <b>A</b> 减慢 1 档，按 <b>D</b> 加快 1 档，范围为 1～20 档。例如当前 5 档，按一次 A 变成 4 档，再按变成 3 档。每按一次调整一档，长按不连发；W 未绑定功能。数字尚在等待时，会先应用数字再加减。调速不会改变开始／暂停状态。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按 S 或回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>细条显示当前页面进度，点击百分比或齿轮展开设置。拖动点阵可上下移动，拖到另一侧可切换贴靠方向；点击「−」收起。到达章节末尾后会停止，请自行打开下一章。</p><p>展开「阅读区域调整」并启用自定义版面，可拓宽正文、减少顶部留白；点击「恢复默认版面」即可还原网站排版。版面偏好保存在本地。</p><p>微信读书自动滚动 · v1.4.2</p></details>
+        <details><summary>使用说明</summary><p>按 <b>S</b> 或 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>按 <b>A</b> 减慢 1 档，按 <b>D</b> 加快 1 档，范围为 1～20 档。例如当前 5 档，按一次 A 变成 4 档，再按变成 3 档。每按一次调整一档，长按不连发；W 未绑定功能。数字尚在等待时，会先应用数字再加减。调速不会改变开始／暂停状态。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按 S 或回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动不会暂停或操作翻译功能，会从新位置继续。到达底部或手动暂停才停止；标签页进入后台暂时停止移动，返回后继续。</p><p>细条显示当前页面进度，点击百分比或齿轮展开设置。拖动点阵可上下移动，拖到另一侧可切换贴靠方向；点击「−」收起。到达章节末尾后会停止，请自行打开下一章。</p><p>展开「阅读区域调整」并启用自定义版面，可拓宽正文、减少顶部留白；点击「恢复默认版面」即可还原网站排版。版面偏好保存在本地。</p><p>微信读书自动滚动 · v1.4.3</p></details>
         <div class="entry" role="status" aria-live="polite"></div>
       </div>
       <div class="mini glass">
@@ -84,6 +84,7 @@
   const slider = root.querySelector('#speed');
   const motion = new Motion();
   let level = 5, running = false, frame = 0, endSince = null, lastMaximum = null;
+  let lastWritten = null, gestureUntil = 0, touching = false;
   let route = location.href, chapter = chapterKey(), position = null, moved = false, dockSide = 'left';
   const save = values => { try { chrome.storage.local.set(values).catch(() => {}); } catch {} };
   const numberEntry = new NumberEntry({
@@ -92,7 +93,7 @@
     invalid: () => { root.querySelector('.entry').textContent = '请输入 1～20 之间的速度。'; const button = root.querySelector('.rail-speed'); button.textContent = '1–20'; button.setAttribute('aria-label', '输入超出范围，请输入 1～20 之间的速度'); }
   });
   root.querySelectorAll('details').forEach(section => section.addEventListener('toggle', clamp));
-  globalThis.WeReadLayout.mount(root, pause);
+  globalThis.WeReadLayout.mount(root, () => { numberEntry.clear(); motion.reset(document.scrollingElement.scrollTop); lastWritten = null; endSince = null; });
   function chapterKey() {
     return document.querySelector('.readerTopBar_title')?.textContent || document.title;
   }
@@ -116,13 +117,22 @@
   function inReader() { return location.pathname.startsWith('/web/reader/'); }
   function tick(time) {
     if (!running) return;
-    if (document.hidden || !inReader() || location.href !== route || chapterKey() !== chapter) { pause(); return; }
+    if (document.hidden) { motion.time = null; return; }
+    if (!inReader() || location.href !== route || chapterKey() !== chapter) { pause(); return; }
     const scroll = document.scrollingElement;
     const maximum = Math.max(0, scroll.scrollHeight - scroll.clientHeight);
     if (lastMaximum !== maximum) { endSince = null; lastMaximum = maximum; }
-    const next = motion.next(time, level, maximum);
-    // Retain a floating-point position even when the browser rounds scrollTop.
-    window.scrollTo({ top: next, left: window.scrollX, behavior: 'instant' });
+    // Rebase only external movement: preserve fractions from our own writes.
+    if (lastWritten === null || Math.abs(scroll.scrollTop - lastWritten) > .75) {
+      motion.reset(scroll.scrollTop); endSince = null;
+    }
+    if (touching || performance.now() < gestureUntil) {
+      motion.reset(scroll.scrollTop);
+    } else {
+      const next = motion.next(time, level, maximum);
+      window.scrollTo({ top: next, left: window.scrollX, behavior: 'instant' });
+    }
+    lastWritten = scroll.scrollTop;
     if (scroll.scrollTop >= maximum - 1) {
       if (endSince === null) endSince = time;
       if (time - endSince >= 900) { pause('本章已结束'); return; }
@@ -134,7 +144,7 @@
     if (document.hidden || !inReader()) return;
     // Starting after a selection is allowed, but never clears the selection.
     route = location.href; chapter = chapterKey();
-    motion.reset(document.scrollingElement.scrollTop); lastMaximum = null; endSince = null;
+    motion.reset(document.scrollingElement.scrollTop); lastWritten = null; lastMaximum = null; endSince = null;
     running = true; root.querySelector('.status').textContent = '滚动中'; update();
     frame = requestAnimationFrame(tick);
   }
@@ -149,11 +159,12 @@
   root.querySelector('.collapse').addEventListener('click', () => { setExpanded(false); root.querySelector('.expand').focus(); });
   root.querySelectorAll('[aria-controls="settings"]').forEach(button => button.addEventListener('click', () => setExpanded(panel.classList.contains('collapsed'))));
   const inside = event => event.composedPath().includes(host);
-  const manual = event => { if (!inside(event)) { numberEntry.clear(); if (running) pause(); } };
+  // Yield movement briefly to the trackpad without changing running state.
+  const manual = event => { if (!inside(event)) { numberEntry.clear(); gestureUntil = performance.now() + 180; } };
   document.addEventListener('wheel', manual, { passive:true, capture:true });
-  document.addEventListener('touchstart', manual, { passive:true, capture:true });
-  document.addEventListener('pointerdown', manual, true);
-  document.addEventListener('click', manual, true);
+  document.addEventListener('touchstart', event => { if (!inside(event)) { touching = true; manual(event); } }, { passive:true, capture:true });
+  document.addEventListener('touchend', () => { touching = false; gestureUntil = performance.now() + 180; }, { passive:true });
+  document.addEventListener('touchcancel', () => { touching = false; }, { passive:true });
   document.addEventListener('keydown', event => {
     const path = event.composedPath();
     const elements = path.filter(node => node instanceof Element);
@@ -174,13 +185,14 @@
       else if (typeof action === 'number') numberEntry.push(action);
       return;
     }
-    if (event.key === 'Escape' || (!inside(event) && ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))) pause();
+    if (event.key === 'Escape') pause();
+    else if (!inside(event) && ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key)) manual(event);
   }, true);
-  document.addEventListener('selectionchange', () => {
-    if (running && document.getSelection()?.toString()) pause();
+  document.addEventListener('visibilitychange', () => {
+    numberEntry.clear(); touching = false;
+    cancelAnimationFrame(frame); motion.time = null;
+    if (!document.hidden && running) { lastWritten = null; endSince = null; frame = requestAnimationFrame(tick); }
   });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
-  window.addEventListener('blur', () => pause());
   document.addEventListener('focusin', event => { if (!inside(event)) numberEntry.clear(); }, true);
   window.addEventListener('pagehide', () => pause());
   function place(x, y) {
