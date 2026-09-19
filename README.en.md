@@ -4,7 +4,7 @@
 
 Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a slim edge-docked progress rail.
 
-**Version 1.4.0 · No account · No analytics · No external dependencies**
+**Version 1.4.1 · No account · No analytics · No external dependencies**
 
 ## Install in Chrome
 
@@ -12,7 +12,7 @@ Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Re
 2. Unzip it and keep the folder somewhere permanent.
 3. Type `chrome://extensions` in Chrome's address bar and enable **Developer mode**.
 4. Click **Load unpacked**. Open the extracted folder and select its **extension** subfolder.
-5. Check that **WeRead Auto Scroll 1.4.0** appears, then refresh your WeRead book.
+5. Check that **WeRead Auto Scroll 1.4.1** appears, then refresh your WeRead book.
 
 **Select the folder containing `manifest.json`, not the outer folder or ZIP.** If Chrome says “Manifest file is missing or unreadable,” go one level deeper into `extension`.
 
@@ -35,6 +35,8 @@ Open a book. A **48px progress rail** appears at the left viewport edge, collaps
 | Control | What it does |
 | --- | --- |
 | **Enter / Return** | Start or pause |
+| **A** | Decrease speed by one, minimum 1 |
+| **D** | Increase speed by one, maximum 20 |
 | **1–9** | Choose that speed after a half-second wait |
 | **1**, then **5** quickly | Choose speed **15** |
 | **2**, then **0** quickly | Choose speed **20** |
@@ -44,6 +46,8 @@ Open a book. A **48px progress rail** appears at the left viewport edge, collaps
 | Slider | Instantly choose any speed from 1–20 |
 | Dotted handle | Move vertically or drag to the opposite edge |
 | **−** / compact speed button | Collapse / expand controls |
+
+A/D applies one step per keypress; holding does not repeat. Pending numeric input is applied before stepping. Running/paused state is preserved. W/S remain unassigned, and typing/IME/modifier guards apply.
 
 ### Typing a two-digit speed
 
@@ -98,7 +102,7 @@ This is an independent project, not affiliated with Tencent or WeChat Reading. I
 ## Troubleshooting
 
 - **No panel:** open a book directly and refresh. Loading the bookshelf alone does not inject the extension.
-- **Keyboard does nothing:** verify version 1.4.0, refresh the book, and click a blank margin outside text inputs or controls.
+- **Keyboard does nothing:** verify version 1.4.1, refresh the book, and click a blank margin outside text inputs or controls.
 - **Two digits become separate speeds:** type the second digit within half a second.
 - **Scrolling paused:** page interaction and tab/window changes intentionally pause it.
 - WeRead layout changes or another extension may affect behavior. Include Chrome version, extension version, and reproduction steps in an issue; avoid posting private account information or book text.

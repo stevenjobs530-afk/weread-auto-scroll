@@ -16,6 +16,8 @@
       if (interactive && !toggleFocused) return null;
       return event.repeat ? 'consume' : 'toggle';
     }
+    if (event.key?.toLowerCase() === 'a') return event.repeat ? 'consume' : 'slower';
+    if (event.key?.toLowerCase() === 'd') return event.repeat ? 'consume' : 'faster';
     if (/^[0-9]$/.test(event.key)) return event.repeat ? 'consume' : Number(event.key);
     return null;
   }
@@ -48,5 +50,6 @@
     if (maximum <= 1 || top >= maximum - 1) return 100;
     return Math.max(1, Math.min(99, Math.floor(Math.max(0, top) / maximum * 100)));
   }
-  globalThis.WeReadScrollCore = { speed, Motion, shortcut, NumberEntry, scrollPercent };
+  const stepSpeed = (level, delta) => Math.max(1, Math.min(20, level + delta));
+  globalThis.WeReadScrollCore = { stepSpeed, speed, Motion, shortcut, NumberEntry, scrollPercent };
 })();

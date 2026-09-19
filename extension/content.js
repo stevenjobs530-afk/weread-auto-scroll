@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   if (window.top !== window || document.getElementById('weread-auto-scroll')) return;
-  const { speed, Motion, shortcut, NumberEntry, scrollPercent } = globalThis.WeReadScrollCore;
+  const { speed, Motion, shortcut, NumberEntry, scrollPercent, stepSpeed } = globalThis.WeReadScrollCore;
   const host = document.createElement('div');
   host.id = 'weread-auto-scroll';
   host.style.cssText = 'position:fixed!important;left:6px!important;top:40vh!important;z-index:2147483647!important;display:block!important;';
@@ -57,7 +57,7 @@
         <input id="speed" aria-label="滚动速度" type="range" min="1" max="20" step="1" value="5">
         <div class="line ends"><span>慢</span><span>快</span></div>
         <div class="line"><button class="toggle" aria-pressed="false">开始</button><span class="status" role="status" aria-live="polite">准备就绪</span></div>
-        <div class="keys">输入 1～20 调速 · 回车开始／暂停</div>
+        <div class="keys">A 减速 · D 加速 · 回车开始／暂停</div>
         <details class="layout-settings"><summary>阅读区域调整</summary>
           <label class="layout-check"><input id="layout-enabled" type="checkbox">启用自定义版面</label>
           <div class="line"><label for="layout-width">阅读宽度</label><output class="layout-value" for="layout-width">85%</output></div>
@@ -67,7 +67,7 @@
           <p class="layout-note">宽度按当前窗口计算，两侧保留边距。减少顶部留白可多显示一些内容，章节仍向下滚动。调整时会暂停滚动。</p>
           <button id="layout-reset">恢复默认版面</button>
         </details>
-        <details><summary>使用说明</summary><p>按 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>细条显示当前页面进度，点击百分比或齿轮展开设置。拖动点阵可上下移动，拖到另一侧可切换贴靠方向；点击「−」收起。到达章节末尾后会停止，请自行打开下一章。</p><p>展开「阅读区域调整」并启用自定义版面，可拓宽正文、减少顶部留白；点击「恢复默认版面」即可还原网站排版。版面偏好保存在本地。</p><p>微信读书自动滚动 · v1.4.0</p></details>
+        <details><summary>使用说明</summary><p>按 <b>回车键（Enter）</b>开始或暂停。拖动滑块，或直接输入 <b>1～20</b> 选择速度。</p><p>按 <b>A</b> 减慢 1 档，按 <b>D</b> 加快 1 档，范围为 1～20 档。例如当前 5 档，按一次 A 变成 4 档，再按变成 3 档。每按一次调整一档，长按不连发；W、S 未绑定功能。数字尚在等待时，会先应用数字再加减。调速不会改变开始／暂停状态。</p><p>想设为 <b>15 档</b>？先按 <b>1</b>，再在 <b>0.5 秒内</b>按 <b>5</b>。设置 <b>20 档</b>则依次按 <b>2</b>、<b>0</b>。</p><p>只按一个数字，等待 0.5 秒即可生效。单独按 <b>0</b>代表 10 档。输入后按回车，会立即应用当前数字并开始或暂停。超出范围的数字不会改变速度。</p><p>在搜索框、笔记等输入框中打字时，快捷键不会触发。若回车无反应，请先点击书页空白处。手动滚动、点击书页或切换窗口会自动暂停。</p><p>细条显示当前页面进度，点击百分比或齿轮展开设置。拖动点阵可上下移动，拖到另一侧可切换贴靠方向；点击「−」收起。到达章节末尾后会停止，请自行打开下一章。</p><p>展开「阅读区域调整」并启用自定义版面，可拓宽正文、减少顶部留白；点击「恢复默认版面」即可还原网站排版。版面偏好保存在本地。</p><p>微信读书自动滚动 · v1.4.1</p></details>
         <div class="entry" role="status" aria-live="polite"></div>
       </div>
       <div class="mini glass">
@@ -166,6 +166,11 @@
       // Prevent Enter from also synthesizing a click on our focused toggle.
       event.preventDefault(); event.stopImmediatePropagation();
       if (action === 'toggle') { numberEntry.flush(); toggle(); }
+      else if (action === 'slower' || action === 'faster') {
+        numberEntry.flush();
+        level = stepSpeed(level, action === 'slower' ? -1 : 1);
+        update(); save({ speed: level });
+      }
       else if (typeof action === 'number') numberEntry.push(action);
       return;
     }
