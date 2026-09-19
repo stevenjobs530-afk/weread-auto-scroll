@@ -108,7 +108,7 @@ test('short pages are complete and dynamic growth recalculates progress', () => 
   assert.equal(scrollPercent(1000,2000,1000),100);
   assert.equal(scrollPercent(1000,3000,1000),50);
 });
-test('A/D speed steps stop at both boundaries and W/S stay unassigned', () => {
+test('A/D speed steps stop at both boundaries and W stays unassigned', () => {
  const {stepSpeed}=globalThis.WeReadScrollCore;
  let level=5; const levels=[];
  for(let i=0;i<6;i++) {level=stepSpeed(level,-1);levels.push(level);}
@@ -117,7 +117,7 @@ test('A/D speed steps stop at both boundaries and W/S stay unassigned', () => {
  assert.equal(level,20);
  for(const key of ['a','A']) assert.equal(shortcut({key}),'slower');
  for(const key of ['d','D']) assert.equal(shortcut({key}),'faster');
- for(const key of ['w','s']) assert.equal(shortcut({key}),null);
+ for(const key of ['w']) assert.equal(shortcut({key}),null);
 });
 test('A/D respects editing, modifiers, IME and held-key guards', () => {
  for(const key of ['a','d']) {
@@ -125,4 +125,15 @@ test('A/D respects editing, modifiers, IME and held-key guards', () => {
   assert.equal(shortcut({key,repeat:true}),'consume');
   for(const flag of ['isComposing','ctrlKey','metaKey','altKey','shiftKey']) assert.equal(shortcut({key,[flag]:true}),null);
  }
+});
+
+test('S toggles like Enter without repeats or typing interference', () => {
+ for(const key of ['s','S']) {
+  assert.equal(shortcut({key}),'toggle');
+  assert.equal(shortcut({key,repeat:true}),'consume');
+  assert.equal(shortcut({key},{typing:true}),null);
+  for(const flag of ['isComposing','ctrlKey','metaKey','altKey','shiftKey']) assert.equal(shortcut({key,[flag]:true}),null);
+  assert.equal(shortcut({key,keyCode:229}),null);
+ }
+ assert.equal(shortcut({key:'Enter'}),'toggle');
 });

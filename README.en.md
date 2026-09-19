@@ -4,7 +4,7 @@
 
 Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Reading](https://weread.qq.com/) with **20 speed levels**, keyboard shortcuts, and a slim edge-docked progress rail.
 
-**Version 1.4.1 · No account · No analytics · No external dependencies**
+**Version 1.4.2 · No account · No analytics · No external dependencies**
 
 ## Install in Chrome
 
@@ -12,7 +12,7 @@ Read at your own pace. A small Chrome extension that smoothly scrolls [WeChat Re
 2. Unzip it and keep the folder somewhere permanent.
 3. Type `chrome://extensions` in Chrome's address bar and enable **Developer mode**.
 4. Click **Load unpacked**. Open the extracted folder and select its **extension** subfolder.
-5. Check that **WeRead Auto Scroll 1.4.1** appears, then refresh your WeRead book.
+5. Check that **WeRead Auto Scroll 1.4.2** appears, then refresh your WeRead book.
 
 **Select the folder containing `manifest.json`, not the outer folder or ZIP.** If Chrome says “Manifest file is missing or unreadable,” go one level deeper into `extension`.
 
@@ -34,7 +34,7 @@ Open a book. A **48px progress rail** appears at the left viewport edge, collaps
 
 | Control | What it does |
 | --- | --- |
-| **Enter / Return** | Start or pause |
+| **S or Enter / Return** | Start or pause |
 | **A** | Decrease speed by one, minimum 1 |
 | **D** | Increase speed by one, maximum 20 |
 | **1–9** | Choose that speed after a half-second wait |
@@ -47,13 +47,13 @@ Open a book. A **48px progress rail** appears at the left viewport edge, collaps
 | Dotted handle | Move vertically or drag to the opposite edge |
 | **−** / compact speed button | Collapse / expand controls |
 
-A/D applies one step per keypress; holding does not repeat. Pending numeric input is applied before stepping. Running/paused state is preserved. W/S remain unassigned, and typing/IME/modifier guards apply.
+A/D applies one step per keypress; holding does not repeat. Pending numeric input is applied before stepping. Running/paused state is preserved. W remains unassigned, and typing/IME/modifier guards apply.
 
 ### Typing a two-digit speed
 
 Press both digits **within 500 milliseconds**. The panel shows your pending number while waiting. A valid pair applies immediately, without first applying its first digit. If you wait longer, the digits become separate speed choices.
 
-Numbers outside 1–20, such as **25** or **99**, show a hint and keep your existing speed. Changing speed never starts scrolling by itself. Pressing Enter while a digit is pending applies that number, then starts or pauses. Holding a key does not repeat the action.
+Numbers outside 1–20, such as **25** or **99**, show a hint and keep your existing speed. Changing speed never starts scrolling by itself. Pressing S or Enter while a digit is pending applies that number, then starts or pauses. Holding a key does not repeat the action.
 
 Shortcuts are inactive in text fields, notes, search inputs, or during input-method composition. Command, Control, Option/Alt, and Shift combinations are untouched. Enter retains its normal action on focused links, sliders, and buttons other than the extension's Start/Pause button. **Click a blank book margin to return keyboard focus to reading.**
 
@@ -102,7 +102,7 @@ This is an independent project, not affiliated with Tencent or WeChat Reading. I
 ## Troubleshooting
 
 - **No panel:** open a book directly and refresh. Loading the bookshelf alone does not inject the extension.
-- **Keyboard does nothing:** verify version 1.4.1, refresh the book, and click a blank margin outside text inputs or controls.
+- **Keyboard does nothing:** verify version 1.4.2, refresh the book, and click a blank margin outside text inputs or controls.
 - **Two digits become separate speeds:** type the second digit within half a second.
 - **Scrolling paused:** page interaction and tab/window changes intentionally pause it.
 - WeRead layout changes or another extension may affect behavior. Include Chrome version, extension version, and reproduction steps in an issue; avoid posting private account information or book text.

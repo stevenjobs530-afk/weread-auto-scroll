@@ -16,6 +16,7 @@
       if (interactive && !toggleFocused) return null;
       return event.repeat ? 'consume' : 'toggle';
     }
+    if (event.key?.toLowerCase() === 's') return event.repeat ? 'consume' : 'toggle';
     if (event.key?.toLowerCase() === 'a') return event.repeat ? 'consume' : 'slower';
     if (event.key?.toLowerCase() === 'd') return event.repeat ? 'consume' : 'faster';
     if (/^[0-9]$/.test(event.key)) return event.repeat ? 'consume' : Number(event.key);
